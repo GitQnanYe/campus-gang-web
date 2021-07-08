@@ -323,7 +323,7 @@
                 if (!this.user.dept) {
                     this.$get("/school/" + this.user.school.id)
                     .then((res) => {
-                        console.log(res.data)
+                        // console.log(res.data)
                         this.school = res.data.school;
                         this.drawer = true
                         this.$msg("请完善信息", "warning")

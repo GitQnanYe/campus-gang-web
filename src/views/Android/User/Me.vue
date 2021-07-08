@@ -36,7 +36,7 @@
         <van-action-sheet v-model="show" title="充值金额">
             <div>
                 <van-field v-model="balance" type="number" left-icon="balance-o" />
-                <el-button type="primary" style="float: right;margin: 20px" @click="recharge(user.studentId)">提交</el-button>
+                <el-button type="primary" style="float: right;margin: 20px" @click="recharge(user.id, user.studentId)">提交</el-button>
             </div>
         </van-action-sheet>
     </div>
@@ -56,7 +56,7 @@
             ...mapState('user', ['user'])
         },
         created() {
-            console.log(this.user)
+            // console.log(this.user)
         },
         methods:{
             ...mapMutations(['setActive']),
@@ -72,8 +72,8 @@
                 this.$router.push({name:'mTask',params:{index:1}})
 
             },
-            recharge(id){
-                this.$put('/user/rollIn', {studentId: id, balance: this.balance})
+            recharge(id, studentId){
+                this.$put('/user/rollIn', {studentId: studentId, balance: this.balance})
                 .then((res) => {
                     this.$get("/user/" + id)
                     .then((rs) => {

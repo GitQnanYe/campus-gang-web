@@ -100,7 +100,7 @@
             this.$get("/school/" + this.user.school.id)
             .then((res) => {
                 this.dept = res.data.school.depts
-                console.log(this.dept)
+                // console.log(this.dept)
             })
         }
     }

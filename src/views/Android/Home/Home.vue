@@ -111,7 +111,7 @@
                 .then((res) => {
                     this.tasks = res.data.task
                 })
-            console.log(this.user)
+            // console.log(this.user)
         },
         filters: {
             formatDate(time) {
