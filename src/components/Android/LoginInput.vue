@@ -69,8 +69,8 @@
             onSubmit() {
                 if (this.value != "" && this.checked){
                     if (this.btn === '登录'){
-                        this.$post("/user/api/checkUserLogin",
-                            {"studentId": this.studentId, "password": this.password, "school.id": this.schoolId})
+                        this.$get("/user/login",
+                            {"studentId": this.studentId, "password": this.$md5(this.password), "schoolId": this.schoolId})
                         .then(res=>{
                             if (res.data.status) {
                                 if (res.data.user.state == 0){
@@ -87,8 +87,8 @@
                             }
                         })
                     }else {
-                        this.$post("/user/api/addUser",
-                            {"studentId": this.studentId, "password": this.password, "school.id": this.schoolId}
+                        this.$post("/user",
+                            {"studentId": this.studentId, "password": this.$md5(this.password), "schoolId": this.schoolId}
                         ).then((res) => {
                             if (res.data.status) {
                                 this.$msg(res.data.msg, "success")
@@ -107,10 +107,10 @@
             },
         },
         created() {
-            this.$get("/school/api/schools")
+            this.$get("/school")
             .then((res) => {
-                console.log(res.data.schools)
-                this.school = res.data.schools
+                // console.log(res.data.schools)
+                this.school = res.data.school
             })
         }
     }

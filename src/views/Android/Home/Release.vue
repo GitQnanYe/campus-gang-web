@@ -6,7 +6,8 @@
             <van-form @submit="onSubmit">
                 <van-field v-model="taskTitle" label="任务标题" placeholder="请输入任务标题"
                            :rules="[{ required: true, message: '任务标题不能为空' }]"/>
-                <van-field v-model="reward" type="number" placeholder="请输入奖励" label="奖励" :rules="[{ required: true, message: '奖励不能为空' }]">
+                <van-field v-model="reward" type="number" placeholder="请输入奖励" label="奖励"
+                           :rules="[{ required: true, message: '奖励不能为空' }]">
                     <template #extra>余额 {{user.balance}}</template>
                 </van-field>
                 <van-field
@@ -30,7 +31,8 @@
 </template>
 
 <script>
-    import {mapMutations,mapState} from 'vuex';
+    import {mapMutations, mapState} from 'vuex';
+
     export default {
         name: "Release",
         data() {
@@ -40,7 +42,7 @@
                 taskContext: ""
             }
         },
-        computed:{
+        computed: {
             ...mapState('user', ['user'])
         },
         methods: {
@@ -50,31 +52,37 @@
                 history.back()
             },
             onSubmit() {
-                this.$post("/task/api/addTask",
-                    {"publishId.id":this.user.id,"schoolId.id":this.user.school.id,"reward":this.reward,"taskTitle":this.taskTitle,"taskContext":this.taskContext}
-                ).then(res=>{
-                    if (res.data.status){
-                        this.$get("/user/api/findUserById",{id:this.user.id})
-                        .then((rs) => {
-                            sessionStorage.setItem("user", JSON.stringify(rs.data.user))
-                            this.$msg(res.data.msg,"success")
-                            this.setActive(1)
-                            sessionStorage.setItem("active",1)
-                            this.$router.push({name:"mTask"})
-                        })
+                this.$post("/task",
+                    {
+                        "publishId": this.user.id,
+                        "schoolId": this.user.school.id,
+                        "reward": this.reward,
+                        "taskTitle": this.taskTitle,
+                        "taskContext": this.taskContext
+                    }
+                ).then(res => {
+                    if (res.data.status) {
+                        this.$get("/user/" + this.user.id)
+                            .then((rs) => {
+                                sessionStorage.setItem("user", JSON.stringify(rs.data.user))
+                                this.$msg(res.data.msg, "success")
+                                this.setActive(1)
+                                sessionStorage.setItem("active", 1)
+                                this.$router.push({name: "mTask"})
+                            })
 
-                    }else {
-                        this.$msg(res.data.msg,"error")
+                    } else {
+                        this.$msg(res.data.msg, "error")
                     }
                 })
             },
 
         },
         created() {
-            if (!sessionStorage.getItem('user')){
-                this.$msg("您向未登陆,没有权限","error")
+            if (!sessionStorage.getItem('user')) {
+                this.$msg("您向未登陆,没有权限", "error")
                 this.$router.push("/m/login")
-            }else {
+            } else {
                 this.setUser(JSON.parse(sessionStorage.getItem("user")))
             }
         }
@@ -82,7 +90,7 @@
 </script>
 
 <style scoped>
-    .title{
+    .title {
         background-color: #f4f4f5;
         color: #909399;
         padding: 5px 16px;

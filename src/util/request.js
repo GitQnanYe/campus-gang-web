@@ -7,8 +7,10 @@ const Qs = require("querystring");
 
 var instance = axios.create({
     // 默认路径
-    // 如果api已经部署到云上, 更改以下url
-    baseURL: 'http://localhost:8080',
+    // 服務器
+    baseURL: 'https://api.campus.qnan.top',
+    // 本地測試
+    // baseURL: 'http://localhost:8080',
     // withCredentials: true,
     // 超时时间
     timeout: 20000

@@ -54,7 +54,7 @@
                         :active-text-color="themeColor.color"
                         menu-trigger="click">
 
-                    <el-menu-item @click="recharge(user.id)">充值余额</el-menu-item>
+                    <el-menu-item @click="recharge(user.studentId)">充值余额</el-menu-item>
                     <el-submenu index="1">
                         <template slot="title">更换主题</template>
                         <el-menu-item v-for="item in theme" @click="changeColor(item)">
@@ -219,7 +219,7 @@
                     inputErrorMessage: '格式不对，只能输入数字'
                 }).then((res) => {
                     // console.log(res);
-                    this.$put('/user', {id: id, balance: res.value})
+                    this.$put('/user/rollIn', {studentId: id, balance: res.value})
                     .then((res) => {
                         this.newList(this.user.id)
                         this.$notifyMsg('成功', '充值成功', 'success')

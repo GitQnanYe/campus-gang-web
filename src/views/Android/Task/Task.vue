@@ -17,7 +17,7 @@
                                     </div>
                                     <div class="van-cell__value van-panel__header-value">
                                         <span style="font-size: 12px" v-show="item.state == 0" @click="cancel(item.id)">取消任务</span>
-                                        <span style="font-size: 12px" @click="showRelease(item.acceptId)" v-show="item.state != 0">查看接收人</span>
+                                        <span style="font-size: 12px" @click="showRelease(item.accept)" v-show="item.state != 0">查看接收人</span>
                                     </div>
                                 </div>
                             </template>
@@ -41,6 +41,9 @@
                         </van-panel>
                     </div>
                 </div>
+                <div style="text-align: center; margin-top: 10%">
+                    <span v-if="tasks.length == 0"><i class="el-icon-refresh-right"></i>暂无发布任务</span>
+                </div>
             </van-tab>
             <van-tab title="我接收的">
                 <div class="piece" v-for="item in acceptTheTask">
@@ -58,7 +61,7 @@
                                     </div>
                                     <div class="van-cell__value van-panel__header-value">
                                         <span style="font-size: 12px" v-show="item.state == 0" @click="cancel(item.id)">取消任务</span>
-                                        <span style="font-size: 12px" @click="showRelease(item.publishId)">查看发布人</span>
+                                        <span style="font-size: 12px" @click="showRelease(item.publish)">查看发布人</span>
                                     </div>
                                 </div>
                             </template>
@@ -73,6 +76,9 @@
                             </div>
                         </van-panel>
                     </div>
+                </div>
+                <div style="text-align: center; margin-top: 10%">
+                    <span v-if="acceptTheTask.length == 0"><i class="el-icon-refresh-right"></i>暂无接单</span>
                 </div>
             </van-tab>
         </van-tabs>
@@ -131,9 +137,9 @@
                     message: '确定取消任务吗',
                     showCancelButton:true
                 }).then(() => {
-                    this.$post("/task/api/delTask", {id: id})
+                    this.$del("/task/" + id)
                     .then(res => {
-                        this.$get("/user/api/findUserById",{id:this.user.id})
+                        this.$get("/user",{id:this.user.id})
                         .then((rs) => {
                             sessionStorage.setItem("user", JSON.stringify(rs.data.user))
                             this.setUser(JSON.parse(sessionStorage.getItem("user")))
@@ -147,17 +153,17 @@
             },
             //获取我发布的任务
             newList(){
-                this.$post("task/api/findTasksByPublishOrAcceptId",{'publishId.id':this.user.id})
+                this.$get("/task/published",{id: this.user.id})
                 .then(res=>{
-                    this.tasks = res.data.tasks
+                    this.tasks = res.data.task
                 })
             },
             //获取我接收的任务
             newReceive() {
-                this.$post("/task/api/findTasksByPublishOrAcceptId", {'acceptId.id': this.user.id})
+                this.$get("/task/accepted", {id: this.user.id})
                 .then(res => {
-                    this.acceptTheTask = res.data.tasks
-                    console.log(this.acceptTheTask)
+                    this.acceptTheTask = res.data.task
+                    // console.log(this.acceptTheTask)
                 })
             },
             //完成任务
@@ -167,7 +173,7 @@
                     message: '确定接收人完成此任务了吗',
                     showCancelButton:true
                 }).then(() => {
-                    this.$post("/task/api/missionAccomplished", {id: id})
+                    this.$put('task/' + id)
                     .then(res => {
                         this.$msg(res.data.msg,"success" );
                         this.newList()
@@ -183,7 +189,7 @@
                     message: '确定取消该任务吗',
                     showCancelButton:true
                 }).then(() => {
-                    this.$post('/task/api/theRecipientCancelsTheTask', {id: id})
+                    this.$put('/task/takerCancel/' + id)
                     .then(res => {
                         this.$msg(res.data.msg,"success")
                         this.newReceive()

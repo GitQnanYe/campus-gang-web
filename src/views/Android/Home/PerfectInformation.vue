@@ -71,17 +71,17 @@
             },
             onSubmit() {
                 if (this.cascaderValue.length > 0){
-                    this.$post("/user/api/updUser",
+                    this.$put("/user",
                         {
                             id: this.user.id,
-                            "dept.id": this.cascaderValue[0],
-                            "aClass.id": this.cascaderValue[1],
+                            "deptId": this.cascaderValue[0],
+                            "classId": this.cascaderValue[1],
                             "username": this.username,
                             "phone": this.phone,
                             'sex' : this.sex
                         })
                     .then(res => {
-                        this.$get("/user/api/findUserById",{id:this.user.id})
+                        this.$get("/user/" + this.user.id)
                         .then((rs) => {
                             sessionStorage.setItem("user", JSON.stringify(rs.data.user))
                             this.setUser(JSON.parse(sessionStorage.getItem("user")))
@@ -97,7 +97,7 @@
         },
         created() {
             this.setUser(JSON.parse(sessionStorage.getItem("user")))
-            this.$post("/school/api/findSchool", {id: this.user.school.id})
+            this.$get("/school/" + this.user.school.id)
             .then((res) => {
                 this.dept = res.data.school.depts
                 console.log(this.dept)

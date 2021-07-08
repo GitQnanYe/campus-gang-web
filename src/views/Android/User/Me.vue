@@ -36,7 +36,7 @@
         <van-action-sheet v-model="show" title="充值金额">
             <div>
                 <van-field v-model="balance" type="number" left-icon="balance-o" />
-                <el-button type="primary" style="float: right;margin: 20px" @click="recharge(user.id)">提交</el-button>
+                <el-button type="primary" style="float: right;margin: 20px" @click="recharge(user.studentId)">提交</el-button>
             </div>
         </van-action-sheet>
     </div>
@@ -73,9 +73,9 @@
 
             },
             recharge(id){
-                this.$post('/user/api/updUser', {id: id, balance: this.balance})
+                this.$put('/user/rollIn', {studentId: id, balance: this.balance})
                 .then((res) => {
-                    this.$get("/user/api/findUserById",{id:id})
+                    this.$get("/user/" + id)
                     .then((rs) => {
                         sessionStorage.setItem("user", JSON.stringify(rs.data.user))
                         this.setUser(JSON.parse(sessionStorage.getItem("user")))
