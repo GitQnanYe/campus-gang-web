@@ -4,7 +4,7 @@
             <h2>欢迎回来</h2>
             <label>
                 <span>学号(纯数字)</span>
-                <input type="text" v-model="studentId" oninput = "value=value.replace(/[^\d]/g,'')"/>
+                <input type="text" v-model="studentId" oninput="value=value.replace(/[^\d]/g,'')"/>
             </label>
             <label>
                 <span>密码</span>
@@ -43,7 +43,7 @@
                 <h2>立即注册</h2>
                 <label>
                     <span>学号(纯数字)</span>
-                    <input type="text" v-model="studentId" oninput = "value=value.replace(/[^\d]/g,'')"/>
+                    <input type="text" v-model="studentId" oninput="value=value.replace(/[^\d]/g,'')"/>
                 </label>
                 <label>
                     <span>密码</span>
@@ -67,6 +67,8 @@
 </template>
 
 <script>
+    import {setCookie, getCookie} from "@/util/util";
+
     export default {
         name: "Login",
         data() {
@@ -85,9 +87,10 @@
         },
         created() {
             this.$get("/school")
-            .then((res) => {
-                this.school = res.data.school
-            })
+                .then((res) => {
+                    this.school = res.data.school
+                })
+
         },
         methods: {
             toLogin(val) {
@@ -96,16 +99,20 @@
                     if (val == 'sign') {
                         {
                             this.$get("/user/login",
-                                {"studentId": this.studentId, "password": this.$md5(this.password), "schoolId": this.schoolId}
+                                {
+                                    "studentId": this.studentId,
+                                    "password": this.$md5(this.password),
+                                    "schoolId": this.schoolId
+                                }
                             ).then((res) => {
                                 if (res.data.status) {
-                                    if (res.data.user.state == 0){
-                                        let accountOrName = res.data.user.username?res.data.user.username:res.data.user.studentId;
+                                    if (res.data.user.state == 0) {
+                                        let accountOrName = res.data.user.username ? res.data.user.username : res.data.user.studentId;
                                         //存储数据到sessionStorage
-                                        sessionStorage.setItem("user",JSON.stringify(res.data.user));
+                                        sessionStorage.setItem("user", JSON.stringify(res.data.user));
                                         this.$msg(accountOrName + "，登录成功", "success")
                                         this.$router.push("/home")
-                                    }else {
+                                    } else {
                                         this.$msg('该用户已被冻结，请联系管理员', "error")
                                     }
                                 } else {
@@ -115,7 +122,11 @@
                         }
                     } else {//注册
                         this.$post("/user",
-                            {"studentId": this.studentId, "password": this.$md5(this.password), "schoolId": this.schoolId}
+                            {
+                                "studentId": this.studentId,
+                                "password": this.$md5(this.password),
+                                "schoolId": this.schoolId
+                            }
                         ).then((res) => {
                             if (res.data.status) {
                                 this.$msg(res.data.msg, "success")
@@ -418,13 +429,17 @@
         transform: translate3d(0, 0, 0);
     }
 
-    /deep/ .el-select{
+    /deep/ .el-select {
         display: block !important;
         margin: 0 auto !important;
         width: 260px !important;
     }
-    /deep/ .el-menu{border-right: NONE !important;}
-    /deep/ .el-input__inner{
+
+    /deep/ .el-menu {
+        border-right: NONE !important;
+    }
+
+    /deep/ .el-input__inner {
         border: none !important;
         border-bottom: 1px solid rgba(0, 0, 0, 0.4) !important;
         border-radius: 0px !important;

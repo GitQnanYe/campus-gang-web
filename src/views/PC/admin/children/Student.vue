@@ -103,9 +103,9 @@
                     } else {
                         parameter = {"username": this.input};
                     }
-                    this.$post("/user/api/findUsers", parameter)
+                    this.$get("/user", parameter)
                     .then((res) => {
-                        this.users = res.data.users
+                        this.users = res.data.user
                         this.input = ""
                     })
                 } else {

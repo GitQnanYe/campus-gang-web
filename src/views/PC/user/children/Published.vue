@@ -16,6 +16,7 @@
                                @click="receiver(item)">查看接受人信息
                     </el-button>
                     <template>
+<!--                        <i class="el-icon-edit" style="cursor: pointer; color: #66b1ff" v-show="item.state == 0"/>-->
                         <el-popconfirm title="确定取消任务吗？" @confirm="cancel(item.id)" v-show="item.state == 0">
                             <el-button style="float: right; padding: 3px 0" type="text" slot="reference">取消任务
                             </el-button>
@@ -98,7 +99,7 @@
         },
         methods: {
             retrieveData() {
-                this.$get("/task/published",{id: this.user.id}).then(res => {
+                this.$get("/task/published", {id: this.user.id}).then(res => {
                     // console.log(res.data)
                     this.tasks = res.data.task
                 })
@@ -114,10 +115,10 @@
             },
             cancel(id) {
                 this.$del("/task/" + id)
-                .then(res => {
-                    this.retrieveData()
-                    this.$notifyMsg('成功', res.data.msg, "success");
-                })
+                    .then(res => {
+                        this.retrieveData()
+                        this.$notifyMsg('成功', res.data.msg, "success");
+                    })
             },
             completeTask(id) {
                 this.$msgbox({
@@ -131,12 +132,12 @@
                             // instance.confirmButtonLoading = true;
                             instance.confirmButtonText = '执行中...';
                             this.$put('task/' + id)
-                            .then((res) => {
-                                done();
-                                instance.confirmButtonLoading = false;
-                                this.$msg(res.data.msg, "success");
-                                this.retrieveData()
-                            })
+                                .then((res) => {
+                                    done();
+                                    instance.confirmButtonLoading = false;
+                                    this.$msg(res.data.msg, "success");
+                                    this.retrieveData()
+                                })
                         } else {
                             done();
                         }

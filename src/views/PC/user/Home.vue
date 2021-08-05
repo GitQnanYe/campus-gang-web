@@ -46,6 +46,7 @@
                     <i :class="isCollapse?'el-icon-s-unfold':'el-icon-s-fold'" :style="{color:themeColor.color}"></i>
                 </div>
                 <el-menu
+                        :unique-opened="true"
                         :default-active="activeIndex"
                         class="el-menu-demo"
                         mode="horizontal"
@@ -62,7 +63,8 @@
                         </el-menu-item>
                     </el-submenu>
                     <el-submenu index="2">
-                        <template slot="title">{{user.username}}</template>
+<!--                        <template slot="title">{{user.username}}</template>-->
+                        <el-avatar slot="title" style="background: #65c4a6; user-select: none;">{{firstName}}</el-avatar>
                         <el-menu-item index="2-1" @click="exit">退出</el-menu-item>
                         <el-menu-item index="2-2" @click="updPassword(user.id)">修改密码</el-menu-item>
                         <el-menu-item index="2-3" @click="personalInformation()">修改个人信息</el-menu-item>
@@ -238,7 +240,6 @@
                     this.$notifyMsg("成功",res.data.msg,"success",1000);
                     this.dialogVisible = false;
                     this.newList(this.user.id)
-
                 })
             },
             //根据当前用户查询id
@@ -247,11 +248,23 @@
                 .then((rs) => {
                     sessionStorage.setItem("user", JSON.stringify(rs.data.user))
                     this.setUser(JSON.parse(sessionStorage.getItem("user")))
+                    console.log();
+                    this.firstName = '';
+                    this.textAvatar(rs.data.user.username);
                 })
             },
             exit(){
                 sessionStorage.removeItem('user');
                 this.$router.push('/')
+            },
+            // 文字頭像
+            textAvatar(username) {               
+                let arr = username.split(' ');
+                for (var i in arr) {
+                    this.firstName += arr[i].substr(0,1);
+                }
+                this.firstName = this.firstName.toLocaleUpperCase();
+                console.log('firstName->' + this.firstName);
             }
         },
         computed: {
@@ -276,6 +289,8 @@
                 }
             };
             return {
+                // 文字頭像
+                firstName:'',
                 ruleForm: {
                     username: '',
                     phone: ''
@@ -340,6 +355,7 @@
             window.onresize = () => {
                 this.windowWidth = document.documentElement.clientWidth
             }
+            this.textAvatar(this.user.username);
         }
     }
 </script>

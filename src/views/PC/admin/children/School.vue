@@ -62,11 +62,11 @@
             }
         },
         created() {
-            this.$post('https://campus.api.qnan.top/school/api/schools')
+            this.$get('/school')
             .then(res => {
                 // console.log(res.data)
                 // console.log(this.schools)
-                this.schools = res.data.schools
+                this.schools = res.data.school
             })
         },
         computed:{
