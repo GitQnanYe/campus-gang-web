@@ -1,7 +1,8 @@
 <template>
     <div class="me">
         <div class="top">
-            <img src="../../../assets/images/pic.jpg" class="avatar">
+            <!-- <img src="../../../assets/images/pic.jpg" class="avatar"> -->
+            <el-avatar :size="60" style="user-select: none; font-size: 16px;">{{firstName}}</el-avatar>
             <div class="character">
                 <h3>{{user.username}}</h3>
                 <p>余额:{{user.balance}}</p>
@@ -43,12 +44,13 @@
 </template>
 
 <script>
-    import {mapState,mapMutations} from 'vuex';
+    import {mapState,mapMutations, textAvatar} from 'vuex';
     export default {
         data(){
           return{
               show:false,
-              balance:''
+              balance:'',
+              firstName:''
           }
         },
         name: "Me",
@@ -56,7 +58,13 @@
             ...mapState('user', ['user'])
         },
         created() {
-            // console.log(this.user)
+            console.log(this.user.username)
+            let arr = this.user.username.split(' ');
+            for (var i in arr) {
+                this.firstName += arr[i].substr(0,1);
+            }
+            this.firstName = this.firstName.toLocaleUpperCase();
+            console.log('firstName->' + this.firstName);
         },
         methods:{
             ...mapMutations(['setActive']),

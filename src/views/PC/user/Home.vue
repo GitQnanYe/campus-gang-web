@@ -248,7 +248,7 @@
                 .then((rs) => {
                     sessionStorage.setItem("user", JSON.stringify(rs.data.user))
                     this.setUser(JSON.parse(sessionStorage.getItem("user")))
-                    console.log();
+                    // 修改完名字, 清空當前firstName; 避免出現疊加
                     this.firstName = '';
                     this.textAvatar(rs.data.user.username);
                 })
@@ -355,6 +355,7 @@
             window.onresize = () => {
                 this.windowWidth = document.documentElement.clientWidth
             }
+            // 文字頭像
             this.textAvatar(this.user.username);
         }
     }
