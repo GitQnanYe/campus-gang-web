@@ -1,7 +1,7 @@
 <template>
     <div class="content" :class="isShow?'s--signup':''">
         <div class="form">
-            <h2>欢迎回来</h2>
+            <h2>欢迎回来10:37</h2>
             <label>
                 <span>学号(纯数字)</span>
                 <input type="text" v-model="studentId" oninput="value=value.replace(/[^\d]/g,'')"/>
