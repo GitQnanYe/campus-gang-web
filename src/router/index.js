@@ -131,6 +131,7 @@ const routes = [
 ]
 
 const router = new VueRouter({
+    model: 'history',
     routes
 })
 
